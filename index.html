@@ -8,7 +8,7 @@
     <style>
         /* --- RESET & BASE STYLES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Roboto', sans-serif; background-color: #ffffff; color: #000; -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Roboto', sans-serif; background-color: #fff; color: #000; }
         a { text-decoration: none; color: inherit; }
 
         /* --- TYPOGRAPHY --- */
@@ -22,58 +22,64 @@
         /* --- SEARCH SECTION --- */
         .search-container { max-width: 600px; margin: -30px auto 40px; padding: 0 20px; position: relative; z-index: 10; }
         .search-box { 
-            width: 100%; 
-            padding: 20px; 
-            font-size: 18px; 
-            border: 2px solid #000; 
-            background: #fff; 
-            font-family: 'Roboto', sans-serif;
-            outline: none;
-            box-shadow: 10px 10px 0px rgba(0,0,0,1); /* Hiệu ứng bóng cứng */
+            width: 100%; padding: 20px; font-size: 18px; 
+            border: 2px solid #000; background: #fff; outline: none;
+            box-shadow: 8px 8px 0px rgba(0,0,0,1); /* Bóng cứng */
             transition: all 0.2s;
         }
         .search-box:focus { transform: translate(2px, 2px); box-shadow: 4px 4px 0px rgba(0,0,0,1); }
-        .search-box::placeholder { color: #888; text-transform: uppercase; font-size: 14px; }
 
         /* --- RESULTS GRID --- */
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .status { text-align: center; color: #666; font-style: italic; margin-bottom: 20px; font-size: 14px; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
 
-        /* --- FIGHTER CARD DESIGN --- */
+        /* --- FIGHTER CARD DESIGN (NEW) --- */
         .card { 
-            border: 1px solid #000; 
+            border: 1px solid #ddd; 
             background: #fff; 
             display: flex; 
             align-items: center; 
             padding: 15px; 
-            transition: transform 0.2s;
-            cursor: pointer;
+            transition: all 0.3s ease; /* Hiệu ứng mượt */
+            border-left: 5px solid #000; /* Điểm nhấn đen bên trái */
         }
-        .card:hover { background: #000; color: #fff; }
-        .card:hover .avatar { filter: grayscale(100%) contrast(120%); border-color: #fff; }
-        .card:hover .badge { background: #fff; color: #000; }
-        .card:hover p { color: #ccc; }
 
-        .avatar { width: 80px; height: 80px; object-fit: cover; border: 1px solid #000; margin-right: 20px; flex-shrink: 0; }
-        
+        /* Hover Effect: Nổi lên và đổ bóng đậm */
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #000;
+        }
+
+        .avatar-container {
+            width: 80px; height: 80px; 
+            border-radius: 50%; 
+            overflow: hidden; /* Để cắt ảnh tròn */
+            margin-right: 20px; 
+            flex-shrink: 0;
+            border: 2px solid #eee;
+        }
+
+        .avatar { 
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s; /* Zoom chậm */
+        }
+
+        /* Hover Effect: Zoom ảnh */
+        .card:hover .avatar { transform: scale(1.2); }
+
         .info { flex-grow: 1; }
-        .info h3 { font-size: 20px; margin-bottom: 5px; line-height: 1.2; }
-        .info p { font-size: 13px; color: #666; margin-bottom: 5px; font-family: 'Roboto Mono', monospace; }
+        .info h3 { font-size: 18px; margin-bottom: 5px; color: #000; }
+        .info p { font-size: 13px; color: #666; margin-bottom: 3px; }
         
         .badge { 
-            font-size: 10px; 
-            text-transform: uppercase; 
-            background: #000; 
-            color: #fff; 
-            padding: 2px 6px; 
-            display: inline-block; 
-            margin-left: 5px; 
-            vertical-align: middle;
+            font-size: 10px; text-transform: uppercase; 
+            background: #000; color: #fff; 
+            padding: 2px 6px; margin-left: 5px; vertical-align: middle;
         }
 
-        /* --- FOOTER --- */
         footer { text-align: center; padding: 40px; color: #888; font-size: 12px; margin-top: 50px; border-top: 1px solid #eee; }
     </style>
 </head>
@@ -82,39 +88,36 @@
     <header>
         <div class="logo">VBF</div>
         <div class="subtitle">VIETNAM BOXING FEDERATION</div>
-        <p style="margin-top: 5px; font-size: 12px;">LIÊN ĐOÀN QUYỀN ANH VIỆT NAM</p>
     </header>
 
     <div class="search-container">
-        <input type="text" id="search" class="search-box" placeholder="TRA CỨU VÕ SĨ / HLV (NHẬP TÊN HOẶC ID)..." onkeyup="searchData()">
+        <input type="text" id="search" class="search-box" placeholder="TRA CỨU VÕ SĨ / HLV..." onkeyup="searchData()">
     </div>
 
     <div class="container">
-        <p id="status" class="status">Đang kết nối dữ liệu...</p>
+        <p id="status" class="status">Đang tải dữ liệu...</p>
         <div id="results" class="grid"></div>
     </div>
 
-    <footer>
-        &copy; 2026 VIETNAM BOXING FEDERATION. OFFICIAL DATABASE.
-    </footer>
+    <footer>&copy; 2026 VIETNAM BOXING FEDERATION.</footer>
 
     <script>
         let db = [];
         const statusEl = document.getElementById('status');
 
-        // Fetch dữ liệu
+        // Fetch dữ liệu (Tương đối)
         fetch('vnbf_data.json')
             .then(res => {
-                if (!res.ok) throw new Error("Lỗi tải dữ liệu");
+                if (!res.ok) throw new Error("Lỗi tải file");
                 return res.json();
             })
             .then(data => {
                 db = data;
-                statusEl.innerText = `DỮ LIỆU SẴN SÀNG: ${db.length} HỒ SƠ.`;
+                statusEl.innerText = `Dữ liệu sẵn sàng: ${db.length} hồ sơ.`;
                 setTimeout(() => statusEl.style.display = 'none', 3000);
             })
             .catch(err => {
-                statusEl.innerText = "LỖI: KHÔNG TÌM THẤY DATABASE";
+                statusEl.innerText = "Lỗi kết nối database.";
                 statusEl.style.color = "red";
             });
 
@@ -136,13 +139,14 @@
                 if(item.role === 'coach') roleLabel = 'COACH';
                 if(item.role === 'referee') roleLabel = 'REFEREE';
                 
-                // Link tương đối cho GitHub
                 const link = `${item.role}/${item.id}`; 
                 const imgSrc = `images/${item.image}`;
 
                 resultsDiv.innerHTML += `
                     <a href="${link}" class="card">
-                        <img class="avatar" src="${imgSrc}" onerror="this.src='https://via.placeholder.com/80?text=VBF'">
+                        <div class="avatar-container">
+                            <img class="avatar" src="${imgSrc}" onerror="this.src='https://via.placeholder.com/80?text=VBF'">
+                        </div>
                         <div class="info">
                             <h3>${item.name} <span class="badge">${roleLabel}</span></h3>
                             <p>ID: ${item.id}</p>
@@ -152,9 +156,7 @@
                 `;
             });
             
-            if (found.length === 0) {
-                resultsDiv.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>KHÔNG TÌM THẤY KẾT QUẢ.</p>";
-            }
+            if (found.length === 0) resultsDiv.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>Không tìm thấy.</p>";
         }
     </script>
 </body>

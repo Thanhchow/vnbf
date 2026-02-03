@@ -13,6 +13,7 @@
         .info h3 { margin: 0 0 5px 0; font-size: 16px; }
         .info p { margin: 0; color: #666; font-size: 14px; }
         .badge { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #eee; color: #333; }
+        .loading { text-align: center; color: #666; font-style: italic; display: none; }
     </style>
 </head>
 <body>
@@ -20,16 +21,32 @@
     <h1 style="text-align: center; color: #d32f2f;">Tra Cứu Thông Tin VNBF</h1>
     
     <input type="text" id="search" class="search-box" placeholder="Nhập tên hoặc mã ID..." onkeyup="searchData()">
+    <p id="status" class="loading">Đang tải dữ liệu...</p>
     <div id="results"></div>
 
     <script>
         let db = [];
 
-        // Load data immediately when page opens
-        fetch('/vnbf_data.json')
-            .then(res => res.json())
+        // 1. Show loading status
+        const statusEl = document.getElementById('status');
+        statusEl.style.display = 'block';
+
+        // 2. Fetch data using a RELATIVE path (No slash at the start)
+        // This works on both Localhost and GitHub/vnbf/
+        fetch('vnbf_data.json')
+            .then(res => {
+                if (!res.ok) throw new Error("Không thể tải file dữ liệu");
+                return res.json();
+            })
             .then(data => {
                 db = data;
+                statusEl.innerText = `Đã tải ${db.length} hồ sơ. Hãy nhập tên để tìm.`;
+                setTimeout(() => statusEl.style.display = 'none', 2000);
+            })
+            .catch(err => {
+                statusEl.innerText = "Lỗi: Không tìm thấy file vnbf_data.json";
+                statusEl.style.color = "red";
+                console.error(err);
             });
 
         function searchData() {
@@ -37,24 +54,27 @@
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = "";
 
-            if (query.length < 2) return; // Don't search if less than 2 chars
+            if (query.length < 2) return; 
 
-            // Filter the database
             const found = db.filter(item => 
                 (item.name && item.name.toLowerCase().includes(query)) || 
                 (item.id && String(item.id).includes(query))
-            ).slice(0, 10); // Limit to 10 results
+            ).slice(0, 10); 
 
-            // Show results
             found.forEach(item => {
                 let roleLabel = item.role === 'athlete' ? 'VĐV' : (item.role === 'coach' ? 'HLV' : 'Trọng Tài');
                 
-                // Construct the correct URL for the click
+                // 3. Fix Link Paths for GitHub
+                // We use './' to ensure it stays in the current folder
                 const link = `${item.role}/${item.id}`; 
+                
+                // 4. Fix Image Paths
+                // We use 'images/' directly relative to this file
+                const imgSrc = `images/${item.image}`;
 
                 resultsDiv.innerHTML += `
                     <a href="${link}" class="result-item">
-                        <img class="avatar" src="images/${item.image}" onerror="this.src='https://via.placeholder.com/50'">
+                        <img class="avatar" src="${imgSrc}" onerror="this.src='https://via.placeholder.com/50'">
                         <div class="info">
                             <h3>${item.name} <span class="badge">${roleLabel}</span></h3>
                             <p>ID: ${item.id}</p>

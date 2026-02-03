@@ -5,152 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông tin VNBF</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .card { background: white; width: 100%; max-width: 400px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; text-align: center; }
-        .header { background: #d32f2f; padding: 20px; color: white; }
-        .header h1 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
-        .profile-img-container { margin-top: -50px; }
-        .profile-img { width: 140px; height: 140px; object-fit: cover; border-radius: 50%; border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #eee; }
-        .body { padding: 20px; }
-        .name { font-size: 24px; font-weight: bold; color: #333; margin: 10px 0 5px; }
-        .role-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 15px; }
-        
-        /* Role Colors */
-        .role-athlete { background-color: #e3f2fd; color: #1976d2; }
-        .role-coach { background-color: #e8f5e9; color: #2e7d32; }
-        .role-referee { background-color: #fff3e0; color: #f57c00; }
-
-        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 15px; }
-        .info-row:last-child { border-bottom: none; }
-        .label { color: #666; font-weight: 500; }
-        .value { color: #333; font-weight: 600; }
+        body { font-family: sans-serif; background: #eee; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; max-width: 400px; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+        .debug-box { background: #333; color: #0f0; padding: 10px; margin-top: 20px; text-align: left; font-size: 12px; border-radius: 5px; overflow-wrap: break-word; font-family: monospace; display: none; }
+        img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; background: #ddd; margin-bottom: 15px; }
+        .name { margin: 0; font-size: 22px; color: #333; }
+        .role { display: inline-block; padding: 4px 12px; border-radius: 15px; background: #e3f2fd; color: #1976d2; font-weight: bold; font-size: 14px; margin: 5px 0 15px 0; }
         .hidden { display: none; }
-        .error { color: #d32f2f; padding: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="card" class="card">
-        <div class="header">
-            <h1>Liên Đoàn Cử Tạ - Thể Hình VN</h1>
+    <div class="card">
+        <div id="loading">
+            <h3>Đang tải dữ liệu...</h3>
+            <p>Vui lòng chờ giây lát.</p>
         </div>
 
-        <div id="loading" class="body">
-            <p>Đang tải dữ liệu...</p>
-        </div>
-        
         <div id="profile" class="hidden">
-            <div class="profile-img-container">
-                <img id="p-img" class="profile-img" src="" onerror="this.src='https://vnbf.vn/images/default.jpg'" alt="Avatar">
-            </div>
-            <div class="body">
-                <h2 id="p-name" class="name"></h2>
-                <span id="p-role" class="role-badge"></span>
-
-                <div class="info-row">
-                    <span class="label">Mã ID:</span>
-                    <span class="value" id="p-id"></span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Năm sinh:</span>
-                    <span class="value" id="p-dob"></span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Giới tính:</span>
-                    <span class="value" id="p-gender"></span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Đơn vị:</span>
-                    <span class="value" id="p-unit"></span>
-                </div>
-            </div>
+            <img id="p-img" src="" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+            <h2 id="p-name" class="name"></h2>
+            <span id="p-role" class="role"></span>
+            <p><strong>ID:</strong> <span id="p-id"></span></p>
+            <p><strong>Đơn vị:</strong> <span id="p-unit"></span></p>
+            <p><strong>Năm sinh:</strong> <span id="p-dob"></span></p>
         </div>
 
-        <div id="error" class="hidden error">
-            <h3>Không tìm thấy dữ liệu</h3>
-            <p>Vui lòng kiểm tra lại mã QR hoặc liên hệ ban tổ chức.</p>
+        <div id="error" class="hidden">
+            <h3 style="color: #d32f2f;">Có lỗi xảy ra!</h3>
+            <p id="error-msg">Không tìm thấy dữ liệu.</p>
+            <a href="/vnbf/" style="display: inline-block; margin-top: 10px; text-decoration: none; color: blue;">&larr; Quay lại trang chủ</a>
         </div>
+
+        <div id="debug" class="debug-box"></div>
     </div>
 
     <script>
-        // CONFIGURATION
-        // Automatically detect if we are on GitHub testing or the real site
-        const isGitHub = window.location.hostname.includes('github.io');
-        
-        // If on GitHub, we must add '/vnbf' to the front of our links
-        const REPO_NAME = '/vnbf'; 
-        const BASE_PATH = isGitHub ? REPO_NAME : '';
+        // --- CONFIGURATION ---
+        // We explicitly set the repo name to avoid path confusion
+        const REPO_NAME = "vnbf"; 
+        // ---------------------
+
+        function log(msg) {
+            const debugEl = document.getElementById('debug');
+            debugEl.style.display = 'block';
+            debugEl.innerHTML += "> " + msg + "<br>";
+            console.log(msg);
+        }
 
         async function init() {
-            const path = window.location.pathname;
-            
-            // 1. Check if this is a valid profile URL
-            if (!path.includes('/athlete/') && !path.includes('/coach/') && !path.includes('/referee/')) {
-                // If it's a real 404, show error
-                showError();
-                return;
-            }
-
-            // 2. Get ID from URL
-            const segments = path.split('/').filter(p => p.length > 0);
-            const urlId = segments[segments.length - 1];
-
             try {
-                // 3. Fetch Data (Fixed for GitHub subfolder)
-                // We use BASE_PATH to make sure we look in /vnbf/vnbf_data.json
-                const response = await fetch(BASE_PATH + '/vnbf_data.json');
+                // 1. Calculate the correct path to the JSON file
+                // If we are at https://thanhchow.github.io/vnbf/athlete/123
+                // We need https://thanhchow.github.io/vnbf/vnbf_data.json
+                const origin = window.location.origin; // https://thanhchow.github.io
+                const jsonUrl = `${origin}/${REPO_NAME}/vnbf_data.json`;
                 
-                if (!response.ok) throw new Error("File not found");
-                const data = await response.json();
+                log("Looking for data at: " + jsonUrl);
 
-                // 4. Find Person
+                // 2. Parse the Athlete ID from the current URL
+                const path = window.location.pathname; // /vnbf/athlete/052095015204
+                log("Current Path: " + path);
+                
+                const segments = path.split('/').filter(p => p.length > 0);
+                const urlId = segments[segments.length - 1]; // 052095015204
+                log("Detected ID: " + urlId);
+
+                // 3. Fetch the data
+                const response = await fetch(jsonUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load file. Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                log(`Database loaded: ${data.length} records.`);
+
+                // 4. Find the person
+                // We convert both to String to avoid number/string mismatches
                 const person = data.find(p => String(p.id) === String(urlId));
 
                 if (person) {
-                    renderProfile(person);
+                    renderProfile(person, origin);
                 } else {
+                    document.getElementById('error-msg').innerText = `Không tìm thấy ID: ${urlId} trong dữ liệu.`;
                     showError();
                 }
+
             } catch (err) {
-                console.error("Error loading data:", err);
+                document.getElementById('error-msg').innerText = err.message;
+                log("ERROR: " + err.message);
                 showError();
             }
         }
 
-        function renderProfile(person) {
+        function renderProfile(person, origin) {
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('profile').classList.remove('hidden');
 
-            // Text Info
             document.getElementById('p-name').innerText = person.name;
             document.getElementById('p-id').innerText = person.id;
-            document.getElementById('p-dob').innerText = person.dob || "---";
-            document.getElementById('p-gender').innerText = person.gender || "---";
             document.getElementById('p-unit').innerText = person.unit || "---";
+            document.getElementById('p-dob').innerText = person.dob || "---";
 
-            // Image Logic (Fixed for GitHub subfolder)
-            if (person.image) {
-                // We assume images are in a folder named 'images' next to the HTML file
-                document.getElementById('p-img').src = BASE_PATH + '/images/' + person.image;
-            } else {
-                document.getElementById('p-img').src = "https://via.placeholder.com/150?text=No+Image";
-            }
-
-            // Role Logic
+            // Role Badge
             const roleEl = document.getElementById('p-role');
-            let roleText = "Vận Động Viên";
-            let roleClass = "role-athlete";
+            if (person.role === 'coach') roleEl.innerText = "Huấn Luyện Viên";
+            else if (person.role === 'referee') roleEl.innerText = "Trọng Tài";
+            else roleEl.innerText = "Vận Động Viên";
 
-            if (person.role === 'coach') {
-                roleText = "Huấn Luyện Viên";
-                roleClass = "role-coach";
-            } else if (person.role === 'referee') {
-                roleText = "Trọng Tài";
-                roleClass = "role-referee";
+            // Image Path
+            // We construct the absolute path to images
+            if (person.image) {
+                const imgUrl = `${origin}/${REPO_NAME}/images/${person.image}`;
+                document.getElementById('p-img').src = imgUrl;
+                log("Loading Image: " + imgUrl);
             }
-            
-            roleEl.innerText = roleText;
-            roleEl.className = "role-badge " + roleClass;
         }
 
         function showError() {

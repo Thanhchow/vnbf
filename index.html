@@ -26,7 +26,7 @@
         let db = [];
 
         // Load data immediately when page opens
-        fetch('vnbf_data.json')
+        fetch('/vnbf_data.json')
             .then(res => res.json())
             .then(data => {
                 db = data;
@@ -50,7 +50,7 @@
                 let roleLabel = item.role === 'athlete' ? 'VĐV' : (item.role === 'coach' ? 'HLV' : 'Trọng Tài');
                 
                 // Construct the correct URL for the click
-                const link = `/${item.role}/${item.id}`; 
+                const link = `${item.role}/${item.id}`; 
 
                 resultsDiv.innerHTML += `
                     <a href="${link}" class="result-item">

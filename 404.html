@@ -73,28 +73,37 @@
     </div>
 
     <script>
-        // CONFIGURATION: Where are your images stored?
-        // If images are in the same folder as HTML, leave as ""
-        // If images are in a folder named 'images', use "images/"
-        const IMAGE_BASE_URL = "images/"; 
+        // CONFIGURATION
+        // Automatically detect if we are on GitHub testing or the real site
+        const isGitHub = window.location.hostname.includes('github.io');
+        
+        // If on GitHub, we must add '/vnbf' to the front of our links
+        const REPO_NAME = '/vnbf'; 
+        const BASE_PATH = isGitHub ? REPO_NAME : '';
 
         async function init() {
-            // 1. Get ID from URL (works for both /athlete/ID and ?id=ID)
             const path = window.location.pathname;
-            const segments = path.split('/').filter(p => p.length > 0);
-            const urlId = segments[segments.length - 1]; // Get the last part of URL
-
-            if (!urlId) {
+            
+            // 1. Check if this is a valid profile URL
+            if (!path.includes('/athlete/') && !path.includes('/coach/') && !path.includes('/referee/')) {
+                // If it's a real 404, show error
                 showError();
                 return;
             }
 
+            // 2. Get ID from URL
+            const segments = path.split('/').filter(p => p.length > 0);
+            const urlId = segments[segments.length - 1];
+
             try {
-                // 2. Load the JSON database
-                const response = await fetch('/vnbf_data.json');
+                // 3. Fetch Data (Fixed for GitHub subfolder)
+                // We use BASE_PATH to make sure we look in /vnbf/vnbf_data.json
+                const response = await fetch(BASE_PATH + '/vnbf_data.json');
+                
+                if (!response.ok) throw new Error("File not found");
                 const data = await response.json();
 
-                // 3. Find the person (Compare IDs as strings)
+                // 4. Find Person
                 const person = data.find(p => String(p.id) === String(urlId));
 
                 if (person) {
@@ -112,30 +121,27 @@
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('profile').classList.remove('hidden');
 
-            // Text Data
+            // Text Info
             document.getElementById('p-name').innerText = person.name;
             document.getElementById('p-id').innerText = person.id;
             document.getElementById('p-dob').innerText = person.dob || "---";
             document.getElementById('p-gender').innerText = person.gender || "---";
             document.getElementById('p-unit').innerText = person.unit || "---";
 
-            // Image
+            // Image Logic (Fixed for GitHub subfolder)
             if (person.image) {
-                document.getElementById('p-img').src = IMAGE_BASE_URL + person.image;
+                // We assume images are in a folder named 'images' next to the HTML file
+                document.getElementById('p-img').src = BASE_PATH + '/images/' + person.image;
             } else {
-                // Placeholder if no image in database
                 document.getElementById('p-img').src = "https://via.placeholder.com/150?text=No+Image";
             }
 
-            // Role Logic (Translate English role to Vietnamese)
+            // Role Logic
             const roleEl = document.getElementById('p-role');
-            let roleText = "Thành Viên";
+            let roleText = "Vận Động Viên";
             let roleClass = "role-athlete";
 
-            if (person.role === 'athlete') {
-                roleText = "Vận Động Viên";
-                roleClass = "role-athlete";
-            } else if (person.role === 'coach') {
+            if (person.role === 'coach') {
                 roleText = "Huấn Luyện Viên";
                 roleClass = "role-coach";
             } else if (person.role === 'referee') {

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin VNBF</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .card { background: white; width: 100%; max-width: 400px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; text-align: center; }
+        .header { background: #d32f2f; padding: 20px; color: white; }
+        .header h1 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .profile-img-container { margin-top: -50px; }
+        .profile-img { width: 140px; height: 140px; object-fit: cover; border-radius: 50%; border: 5px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #eee; }
+        .body { padding: 20px; }
+        .name { font-size: 24px; font-weight: bold; color: #333; margin: 10px 0 5px; }
+        .role-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 15px; }
+        
+        /* Role Colors */
+        .role-athlete { background-color: #e3f2fd; color: #1976d2; }
+        .role-coach { background-color: #e8f5e9; color: #2e7d32; }
+        .role-referee { background-color: #fff3e0; color: #f57c00; }
+
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 15px; }
+        .info-row:last-child { border-bottom: none; }
+        .label { color: #666; font-weight: 500; }
+        .value { color: #333; font-weight: 600; }
+        .hidden { display: none; }
+        .error { color: #d32f2f; padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="card" class="card">
+        <div class="header">
+            <h1>Liên Đoàn Cử Tạ - Thể Hình VN</h1>
+        </div>
+
+        <div id="loading" class="body">
+            <p>Đang tải dữ liệu...</p>
+        </div>
+        
+        <div id="profile" class="hidden">
+            <div class="profile-img-container">
+                <img id="p-img" class="profile-img" src="" onerror="this.src='https://vnbf.vn/images/default.jpg'" alt="Avatar">
+            </div>
+            <div class="body">
+                <h2 id="p-name" class="name"></h2>
+                <span id="p-role" class="role-badge"></span>
+
+                <div class="info-row">
+                    <span class="label">Mã ID:</span>
+                    <span class="value" id="p-id"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Năm sinh:</span>
+                    <span class="value" id="p-dob"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Giới tính:</span>
+                    <span class="value" id="p-gender"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Đơn vị:</span>
+                    <span class="value" id="p-unit"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="error" class="hidden error">
+            <h3>Không tìm thấy dữ liệu</h3>
+            <p>Vui lòng kiểm tra lại mã QR hoặc liên hệ ban tổ chức.</p>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION: Where are your images stored?
+        // If images are in the same folder as HTML, leave as ""
+        // If images are in a folder named 'images', use "images/"
+        const IMAGE_BASE_URL = "images/"; 
+
+        async function init() {
+            // 1. Get ID from URL (works for both /athlete/ID and ?id=ID)
+            const path = window.location.pathname;
+            const segments = path.split('/').filter(p => p.length > 0);
+            const urlId = segments[segments.length - 1]; // Get the last part of URL
+
+            if (!urlId) {
+                showError();
+                return;
+            }
+
+            try {
+                // 2. Load the JSON database
+                const response = await fetch('/vnbf_data.json');
+                const data = await response.json();
+
+                // 3. Find the person (Compare IDs as strings)
+                const person = data.find(p => String(p.id) === String(urlId));
+
+                if (person) {
+                    renderProfile(person);
+                } else {
+                    showError();
+                }
+            } catch (err) {
+                console.error("Error loading data:", err);
+                showError();
+            }
+        }
+
+        function renderProfile(person) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('profile').classList.remove('hidden');
+
+            // Text Data
+            document.getElementById('p-name').innerText = person.name;
+            document.getElementById('p-id').innerText = person.id;
+            document.getElementById('p-dob').innerText = person.dob || "---";
+            document.getElementById('p-gender').innerText = person.gender || "---";
+            document.getElementById('p-unit').innerText = person.unit || "---";
+
+            // Image
+            if (person.image) {
+                document.getElementById('p-img').src = IMAGE_BASE_URL + person.image;
+            } else {
+                // Placeholder if no image in database
+                document.getElementById('p-img').src = "https://via.placeholder.com/150?text=No+Image";
+            }
+
+            // Role Logic (Translate English role to Vietnamese)
+            const roleEl = document.getElementById('p-role');
+            let roleText = "Thành Viên";
+            let roleClass = "role-athlete";
+
+            if (person.role === 'athlete') {
+                roleText = "Vận Động Viên";
+                roleClass = "role-athlete";
+            } else if (person.role === 'coach') {
+                roleText = "Huấn Luyện Viên";
+                roleClass = "role-coach";
+            } else if (person.role === 'referee') {
+                roleText = "Trọng Tài";
+                roleClass = "role-referee";
+            }
+            
+            roleEl.innerText = roleText;
+            roleEl.className = "role-badge " + roleClass;
+        }
+
+        function showError() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.remove('hidden');
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@
     <style>
         /* --- RESET & BASE STYLES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Roboto', sans-serif; background-color: #fff; color: #000; }
+        body { font-family: 'Roboto', sans-serif; background-color: #fff; color: #000; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
         /* --- TYPOGRAPHY --- */
@@ -19,98 +19,132 @@
         .logo { font-size: 48px; font-weight: 700; line-height: 1; margin-bottom: 10px; border: 4px solid #fff; display: inline-block; padding: 10px 20px; }
         .subtitle { font-size: 14px; opacity: 0.8; letter-spacing: 3px; margin-top: 10px; }
 
+        /* --- LAYOUT GRID --- */
+        /* Chia trang thành 2 phần trên màn hình lớn: Tìm kiếm | Tin tức */
+        .main-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* 2 phần Tìm kiếm, 1 phần Tin tức */
+            gap: 40px;
+        }
+
         /* --- SEARCH SECTION --- */
-        .search-container { max-width: 600px; margin: -30px auto 40px; padding: 0 20px; position: relative; z-index: 10; }
+        .search-section { }
+        
         .search-box { 
             width: 100%; padding: 20px; font-size: 18px; 
             border: 2px solid #000; background: #fff; outline: none;
-            box-shadow: 8px 8px 0px rgba(0,0,0,1); /* Bóng cứng */
+            box-shadow: 8px 8px 0px rgba(0,0,0,1);
             transition: all 0.2s;
+            margin-bottom: 30px;
         }
         .search-box:focus { transform: translate(2px, 2px); box-shadow: 4px 4px 0px rgba(0,0,0,1); }
 
-        /* --- RESULTS GRID --- */
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .status { text-align: center; color: #666; font-style: italic; margin-bottom: 20px; font-size: 14px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .status { color: #666; font-style: italic; margin-bottom: 20px; font-size: 14px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
-        /* --- FIGHTER CARD DESIGN (NEW) --- */
+        /* --- CARD DESIGN --- */
         .card { 
-            border: 1px solid #ddd; 
-            background: #fff; 
-            display: flex; 
-            align-items: center; 
-            padding: 15px; 
-            transition: all 0.3s ease; /* Hiệu ứng mượt */
-            border-left: 5px solid #000; /* Điểm nhấn đen bên trái */
+            border: 1px solid #ddd; background: #fff; display: flex; 
+            align-items: center; padding: 15px; 
+            transition: all 0.3s ease; border-left: 5px solid #000;
         }
-
-        /* Hover Effect: Nổi lên và đổ bóng đậm */
-        .card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            border-color: #000;
-        }
-
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); border-color: #000; }
+        
         .avatar-container {
-            width: 80px; height: 80px; 
-            border-radius: 50%; 
-            overflow: hidden; /* Để cắt ảnh tròn */
-            margin-right: 20px; 
-            flex-shrink: 0;
-            border: 2px solid #eee;
+            width: 70px; height: 70px; border-radius: 50%; overflow: hidden; 
+            margin-right: 15px; flex-shrink: 0; border: 2px solid #eee;
         }
-
-        .avatar { 
-            width: 100%; height: 100%; 
-            object-fit: cover; 
-            transition: transform 0.5s; /* Zoom chậm */
-        }
-
-        /* Hover Effect: Zoom ảnh */
+        .avatar { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
         .card:hover .avatar { transform: scale(1.2); }
 
-        .info { flex-grow: 1; }
-        .info h3 { font-size: 18px; margin-bottom: 5px; color: #000; }
-        .info p { font-size: 13px; color: #666; margin-bottom: 3px; }
+        .info { flex-grow: 1; overflow: hidden; }
+        .info h3 { font-size: 16px; margin-bottom: 5px; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .info p { font-size: 12px; color: #666; margin-bottom: 3px; }
+        .badge { font-size: 10px; background: #000; color: #fff; padding: 2px 6px; margin-left: 5px; }
+
+        /* --- NEWS SECTION (FACEBOOK) --- */
+        .news-section {
+            border-left: 1px solid #eee;
+            padding-left: 40px;
+        }
+        .section-title {
+            font-size: 24px; margin-bottom: 20px; border-bottom: 4px solid #000; 
+            display: inline-block; padding-bottom: 5px;
+        }
         
-        .badge { 
-            font-size: 10px; text-transform: uppercase; 
-            background: #000; color: #fff; 
-            padding: 2px 6px; margin-left: 5px; vertical-align: middle;
+        /* Container cho Facebook Plugin để nó Responsive */
+        .fb-page-container {
+            width: 100%;
+            overflow: hidden;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
         }
 
-        footer { text-align: center; padding: 40px; color: #888; font-size: 12px; margin-top: 50px; border-top: 1px solid #eee; }
+        /* --- FOOTER --- */
+        footer { text-align: center; padding: 40px; color: #888; font-size: 12px; margin-top: 50px; border-top: 1px solid #eee; clear: both; }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .main-wrapper { grid-template-columns: 1fr; } /* Mobile: 1 cột */
+            .news-section { border-left: none; padding-left: 0; margin-top: 50px; }
+            .fb-page-container { max-width: 500px; margin: 0 auto; }
+        }
     </style>
 </head>
 <body>
+
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0" nonce="abc12345"></script>
 
     <header>
         <div class="logo">VBF</div>
         <div class="subtitle">VIETNAM BOXING FEDERATION</div>
     </header>
 
-    <div class="search-container">
-        <input type="text" id="search" class="search-box" placeholder="TRA CỨU VÕ SĨ / HLV..." onkeyup="searchData()">
+    <div class="main-wrapper">
+        
+        <div class="search-section">
+            <h2 class="section-title">TRA CỨU HỒ SƠ</h2>
+            <input type="text" id="search" class="search-box" placeholder="NHẬP TÊN HOẶC ID VÕ SĨ..." onkeyup="searchData()">
+            <p id="status" class="status">Đang tải dữ liệu...</p>
+            <div id="results" class="grid"></div>
+        </div>
+
+        <div class="news-section">
+            <h2 class="section-title">TIN TỨC MỚI NHẤT</h2>
+            <div class="fb-page-container">
+                <div class="fb-page" 
+                     data-href="https://www.facebook.com/liendoanquyenanhvietnam" 
+                     data-tabs="timeline" 
+                     data-width="500" 
+                     data-height="800" 
+                     data-small-header="false" 
+                     data-adapt-container-width="true" 
+                     data-hide-cover="false" 
+                     data-show-facepile="true">
+                    <blockquote cite="https://www.facebook.com/vietnamboxingfederation" class="fb-xfbml-parse-ignore">
+                        <a href="https://www.facebook.com/vietnamboxingfederation">Liên đoàn Quyền Anh Việt Nam</a>
+                    </blockquote>
+                </div>
+            </div>
+            <p style="margin-top:10px; font-size: 12px; color: #666; text-align: center;">
+                Theo dõi Fanpage chính thức để cập nhật giải đấu.
+            </p>
+        </div>
+
     </div>
 
-    <div class="container">
-        <p id="status" class="status">Đang tải dữ liệu...</p>
-        <div id="results" class="grid"></div>
-    </div>
-
-    <footer>&copy; 2026 VIETNAM BOXING FEDERATION.</footer>
+    <footer>&copy; 2026 VIETNAM BOXING FEDERATION. OFFICIAL DATABASE.</footer>
 
     <script>
         let db = [];
         const statusEl = document.getElementById('status');
 
-        // Fetch dữ liệu (Tương đối)
         fetch('vnbf_data.json')
-            .then(res => {
-                if (!res.ok) throw new Error("Lỗi tải file");
-                return res.json();
-            })
+            .then(res => res.ok ? res.json() : Promise.reject("Lỗi file"))
             .then(data => {
                 db = data;
                 statusEl.innerText = `Dữ liệu sẵn sàng: ${db.length} hồ sơ.`;
@@ -131,7 +165,7 @@
             const found = db.filter(item => 
                 (item.name && item.name.toLowerCase().includes(query)) || 
                 (item.id && String(item.id).includes(query))
-            ).slice(0, 12); 
+            ).slice(0, 8); // Giới hạn 8 kết quả để không đẩy trang quá dài
 
             found.forEach(item => {
                 let roleLabel = 'MEMBER';

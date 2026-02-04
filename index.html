@@ -13,99 +13,109 @@
         h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
 
         /* --- HEADER --- */
-        header { background-color: #000; color: #fff; padding: 25px 20px; text-align: center; }
-        .logo { font-size: 40px; font-weight: 700; border: 4px solid #fff; display: inline-block; padding: 5px 20px; letter-spacing: 2px; }
-        .subtitle { font-size: 14px; opacity: 0.9; letter-spacing: 4px; margin-top: 8px; }
+        header { background-color: #000; color: #fff; padding: 30px 20px; text-align: center; }
+        .logo { font-size: 36px; font-weight: 700; border: 3px solid #fff; display: inline-block; padding: 5px 15px; letter-spacing: 2px; }
+        .subtitle { font-size: 12px; opacity: 0.9; letter-spacing: 4px; margin-top: 10px; }
 
-        /* --- LAYOUT GRID (TỶ LỆ 4:6) --- */
+        /* --- LAYOUT GRID --- */
         .main-wrapper {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 15px;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
             display: grid;
-            /* Thay đổi quan trọng: Cột Facebook (bên phải) chiếm 1.5 phần không gian */
-            grid-template-columns: 1fr 1.5fr; 
-            gap: 30px;
+            /* Cột Tìm kiếm chiếm 2 phần, Cột Banner chiếm 1 phần */
+            grid-template-columns: 2fr 1fr; 
+            gap: 40px;
             align-items: start;
         }
 
         /* --- LEFT COLUMN: SEARCH --- */
-        .search-section { 
-            position: sticky; /* Giữ thanh tìm kiếm trôi theo khi cuộn */
-            top: 20px;
-        }
+        .search-section { }
         
         .section-title {
-            font-size: 22px; margin-bottom: 20px; border-bottom: 4px solid #000; 
+            font-size: 20px; margin-bottom: 20px; border-bottom: 3px solid #000; 
             display: inline-block; padding-bottom: 5px;
         }
 
         .search-box { 
-            width: 100%; padding: 15px; font-size: 16px; 
+            width: 100%; padding: 15px 20px; font-size: 16px; 
             border: 2px solid #000; background: #fff; outline: none;
-            box-shadow: 5px 5px 0px rgba(0,0,0,1);
+            box-shadow: 6px 6px 0px rgba(0,0,0,1);
             transition: all 0.2s;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
-        .search-box:focus { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,1); }
+        .search-box:focus { transform: translate(3px, 3px); box-shadow: 3px 3px 0px rgba(0,0,0,1); }
 
-        .status { color: #666; font-style: italic; margin-bottom: 15px; font-size: 13px; }
+        .status { color: #666; font-style: italic; margin-bottom: 20px; font-size: 13px; }
         
-        /* Grid kết quả 1 cột để gọn gàng */
-        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; } 
+        /* Grid kết quả */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; } 
         
-        /* --- CARD DESIGN --- */
+        /* --- CARD VÕ SĨ --- */
         .card { 
             border: 1px solid #ddd; background: #fff; display: flex; 
             align-items: center; padding: 12px; 
             transition: all 0.2s ease; border-left: 5px solid #000;
         }
-        .card:hover { transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #d32f2f; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: #000; }
         
         .avatar-container {
-            width: 60px; height: 60px; border-radius: 50%; overflow: hidden; 
+            width: 65px; height: 65px; border-radius: 50%; overflow: hidden; 
             margin-right: 15px; flex-shrink: 0; border: 2px solid #eee;
         }
         .avatar { width: 100%; height: 100%; object-fit: cover; }
 
-        .info h3 { font-size: 17px; margin-bottom: 4px; color: #000; font-weight: bold; }
-        .info p { font-size: 13px; color: #555; }
-        .badge { font-size: 11px; background: #000; color: #fff; padding: 2px 6px; margin-left: 5px; border-radius: 2px; }
+        .info h3 { font-size: 16px; margin-bottom: 3px; color: #000; font-weight: bold; }
+        .info p { font-size: 12px; color: #555; }
+        .badge { font-size: 10px; background: #000; color: #fff; padding: 2px 5px; margin-left: 5px; }
 
-        /* --- RIGHT COLUMN: FACEBOOK --- */
-        .news-section {
-            background: #fff; /* Bỏ nền xám để trông rộng hơn */
-            /* Loại bỏ padding để Facebook chiếm trọn bề ngang */
-            padding: 0; 
-            border-radius: 8px;
-            text-align: center; /* Căn giữa */
+        /* --- RIGHT COLUMN: FACEBOOK BANNER (NEW) --- */
+        .fb-banner {
+            background-color: #000; /* Nền đen */
+            color: #fff; /* Chữ trắng */
+            padding: 30px;
+            text-align: center;
+            /* Bóng đổ cứng */
+            box-shadow: 10px 10px 0px #d32f2f; 
+            position: sticky; /* Trôi theo khi cuộn chuột */
+            top: 20px;
         }
 
-        .fb-page-container {
-            width: 100%;
-            display: flex;
-            justify-content: center; /* Luôn căn giữa */
+        .fb-icon { font-size: 40px; margin-bottom: 10px; display: block; }
+        .fb-title { font-size: 24px; margin-bottom: 10px; line-height: 1.2; }
+        .fb-desc { font-size: 14px; color: #ccc; margin-bottom: 25px; font-family: 'Roboto', sans-serif; }
+
+        .fb-btn {
+            display: inline-block;
             background: #fff;
-            padding: 10px;
-            border: 1px solid #eee;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Bóng mờ nhẹ */
+            color: #000;
+            padding: 12px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: 0.2s;
+            border: 2px solid #fff;
+        }
+        .fb-btn:hover {
+            background: #000;
+            color: #fff;
+            cursor: pointer;
         }
 
         /* --- FOOTER --- */
-        footer { text-align: center; padding: 30px; color: #888; font-size: 12px; margin-top: 40px; border-top: 1px solid #eee; }
+        footer { text-align: center; padding: 30px; color: #888; font-size: 12px; margin-top: 50px; border-top: 1px solid #eee; }
 
         /* --- MOBILE RESPONSIVE --- */
-        @media (max-width: 900px) {
+        @media (max-width: 800px) {
             .main-wrapper { grid-template-columns: 1fr; } /* Mobile về 1 cột */
-            .news-section { order: -1; margin-bottom: 40px; } /* Đưa tin tức lên đầu */
-            .search-section { position: static; } /* Bỏ sticky trên mobile */
+            .fb-banner { margin-bottom: 40px; position: static; box-shadow: 6px 6px 0px #d32f2f; }
+            .search-section { order: 2; } /* Đưa tìm kiếm xuống dưới banner (tùy chọn) */
+            .fb-banner { order: 1; }
         }
     </style>
 </head>
 <body>
-
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0" nonce="abc12345"></script>
 
     <header>
         <div class="logo">VBF</div>
@@ -115,29 +125,23 @@
     <div class="main-wrapper">
         
         <div class="search-section">
-            <h2 class="section-title">TRA CỨU VÕ SĨ</h2>
-            <input type="text" id="search" class="search-box" placeholder="Nhập tên, ID hoặc Đơn vị..." onkeyup="searchData()">
-            <p id="status" class="status">Đang tải...</p>
+            <h2 class="section-title">TRA CỨU HỒ SƠ</h2>
+            <input type="text" id="search" class="search-box" placeholder="NHẬP TÊN HOẶC ID..." onkeyup="searchData()">
+            <p id="status" class="status">Đang kết nối dữ liệu...</p>
             <div id="results" class="grid"></div>
         </div>
 
-        <div class="news-section">
-            <h2 class="section-title">THÔNG TIN TỪ LIÊN ĐOÀN</h2>
-            <div class="fb-page-container">
-                <div class="fb-page" 
-     data-href="https://www.facebook.com/vietnamboxingfederation" 
-     data-tabs="timeline" 
-     data-width="" 
-     data-height="900" 
-     data-small-header="false" 
-     data-adapt-container-width="true" 
-     data-hide-cover="false" 
-     data-show-facepile="true">
-    <blockquote cite="https://www.facebook.com/vietnamboxingfederation" class="fb-xfbml-parse-ignore">
-        <a href="https://www.facebook.com/vietnamboxingfederation">Vietnam Boxing Federation</a>
-    </blockquote>
-</div>
-            </div>
+        <div class="fb-banner">
+            <div style="font-family: 'Oswald'; font-size: 30px; border: 2px solid white; width: 50px; height: 50px; line-height: 45px; margin: 0 auto 20px auto; border-radius: 50%;">f</div>
+            
+            <h3 class="fb-title">CỘNG ĐỒNG VBF</h3>
+            <p class="fb-desc">
+                Cập nhật lịch thi đấu, kết quả và tin tức mới nhất từ Liên đoàn Quyền Anh Việt Nam.
+            </p>
+            
+            <a href="https://www.facebook.com/vietnamboxingfederation" target="_blank" class="fb-btn">
+                THAM GIA NGAY
+            </a>
         </div>
 
     </div>
@@ -152,7 +156,7 @@
             .then(res => res.ok ? res.json() : Promise.reject("Lỗi"))
             .then(data => {
                 db = data;
-                statusEl.innerText = `DATABASE SẴN SÀNG: ${db.length} HỒ SƠ.`;
+                statusEl.innerText = `SẴN SÀNG: ${db.length} HỒ SƠ.`;
                 setTimeout(() => statusEl.style.display = 'none', 3000);
             })
             .catch(err => {
@@ -170,7 +174,7 @@
                 (item.name && item.name.toLowerCase().includes(query)) || 
                 (item.id && String(item.id).includes(query)) ||
                 (item.unit && item.unit.toLowerCase().includes(query))
-            ).slice(0, 8); 
+            ).slice(0, 10); 
 
             found.forEach(item => {
                 let roleLabel = 'MEMBER';

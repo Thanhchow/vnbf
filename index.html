@@ -23,7 +23,7 @@
             margin: 40px auto;
             padding: 0 20px;
             display: grid;
-            /* Cột Tìm kiếm chiếm 2 phần, Cột Banner chiếm 1 phần */
+            /* Cột Tìm kiếm (2 phần) - Cột Banner (1 phần) */
             grid-template-columns: 2fr 1fr; 
             gap: 40px;
             align-items: start;
@@ -40,11 +40,12 @@
         .search-box { 
             width: 100%; padding: 15px 20px; font-size: 16px; 
             border: 2px solid #000; background: #fff; outline: none;
-            box-shadow: 6px 6px 0px rgba(0,0,0,1);
+            /* Bóng đổ đen cứng */
+            box-shadow: 6px 6px 0px #000;
             transition: all 0.2s;
             margin-bottom: 25px;
         }
-        .search-box:focus { transform: translate(3px, 3px); box-shadow: 3px 3px 0px rgba(0,0,0,1); }
+        .search-box:focus { transform: translate(3px, 3px); box-shadow: 3px 3px 0px #000; }
 
         .status { color: #666; font-style: italic; margin-bottom: 20px; font-size: 13px; }
         
@@ -69,37 +70,49 @@
         .info p { font-size: 12px; color: #555; }
         .badge { font-size: 10px; background: #000; color: #fff; padding: 2px 5px; margin-left: 5px; }
 
-        /* --- RIGHT COLUMN: FACEBOOK BANNER (NEW) --- */
+        /* --- RIGHT COLUMN: FACEBOOK BANNER (UPDATED) --- */
         .fb-banner {
-            background-color: #000; /* Nền đen */
-            color: #fff; /* Chữ trắng */
+            background-color: #fff; /* Nền trắng */
+            color: #000; /* Chữ đen */
             padding: 30px;
             text-align: center;
-            /* Bóng đổ cứng */
-            box-shadow: 10px 10px 0px #d32f2f; 
-            position: sticky; /* Trôi theo khi cuộn chuột */
+            border: 2px solid #000; /* Viền đen dày giống ô tìm kiếm */
+            box-shadow: 6px 6px 0px #000; /* Bóng đen cứng đồng bộ */
+            position: sticky;
             top: 20px;
         }
 
-        .fb-icon { font-size: 40px; margin-bottom: 10px; display: block; }
-        .fb-title { font-size: 24px; margin-bottom: 10px; line-height: 1.2; }
-        .fb-desc { font-size: 14px; color: #ccc; margin-bottom: 25px; font-family: 'Roboto', sans-serif; }
+        /* Icon Facebook đơn giản màu đen */
+        .fb-icon-box {
+            width: 50px; height: 50px; 
+            border: 2px solid #000; 
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 15px auto;
+            font-family: 'Oswald', sans-serif;
+            font-size: 30px;
+            font-weight: bold;
+        }
 
+        .fb-title { font-size: 20px; margin-bottom: 10px; line-height: 1.3; text-transform: uppercase; }
+        .fb-desc { font-size: 13px; color: #444; margin-bottom: 25px; line-height: 1.5; }
+
+        /* Nút màu đen */
         .fb-btn {
             display: inline-block;
-            background: #fff;
-            color: #000;
-            padding: 12px 30px;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 14px;
-            letter-spacing: 1px;
-            transition: 0.2s;
-            border: 2px solid #fff;
-        }
-        .fb-btn:hover {
             background: #000;
             color: #fff;
+            padding: 12px 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            transition: 0.2s;
+            border: 2px solid #000;
+        }
+        .fb-btn:hover {
+            background: #fff; /* Đảo màu khi hover */
+            color: #000;
             cursor: pointer;
         }
 
@@ -108,9 +121,9 @@
 
         /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 800px) {
-            .main-wrapper { grid-template-columns: 1fr; } /* Mobile về 1 cột */
-            .fb-banner { margin-bottom: 40px; position: static; box-shadow: 6px 6px 0px #d32f2f; }
-            .search-section { order: 2; } /* Đưa tìm kiếm xuống dưới banner (tùy chọn) */
+            .main-wrapper { grid-template-columns: 1fr; } 
+            .fb-banner { margin-bottom: 40px; position: static; }
+            .search-section { order: 2; }
             .fb-banner { order: 1; }
         }
     </style>
@@ -132,15 +145,15 @@
         </div>
 
         <div class="fb-banner">
-            <div style="font-family: 'Oswald'; font-size: 30px; border: 2px solid white; width: 50px; height: 50px; line-height: 45px; margin: 0 auto 20px auto; border-radius: 50%;">f</div>
+            <div class="fb-icon-box">f</div>
             
-            <h3 class="fb-title">CỘNG ĐỒNG VBF</h3>
+            <h3 class="fb-title">LIÊN ĐOÀN QUYỀN ANH VIỆT NAM</h3>
             <p class="fb-desc">
-                Cập nhật lịch thi đấu, kết quả và tin tức mới nhất từ Liên đoàn Quyền Anh Việt Nam.
+                Theo dõi trang chính thức để cập nhật lịch thi đấu, kết quả và tin tức mới nhất.
             </p>
             
             <a href="https://www.facebook.com/vietnamboxingfederation" target="_blank" class="fb-btn">
-                THAM GIA NGAY
+                TRUY CẬP FANPAGE
             </a>
         </div>
 

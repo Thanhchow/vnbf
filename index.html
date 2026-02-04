@@ -13,50 +13,54 @@
         h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
 
         /* --- HEADER --- */
-        header { background-color: #000; color: #fff; padding: 30px 20px; text-align: center; }
-        .logo { font-size: 36px; font-weight: 700; border: 3px solid #fff; display: inline-block; padding: 5px 15px; }
-        .subtitle { font-size: 12px; opacity: 0.8; letter-spacing: 2px; margin-top: 5px; }
+        header { background-color: #000; color: #fff; padding: 25px 20px; text-align: center; }
+        .logo { font-size: 40px; font-weight: 700; border: 4px solid #fff; display: inline-block; padding: 5px 20px; letter-spacing: 2px; }
+        .subtitle { font-size: 14px; opacity: 0.9; letter-spacing: 4px; margin-top: 8px; }
 
-        /* --- LAYOUT GRID (50/50 SPLIT) --- */
+        /* --- LAYOUT GRID (TỶ LỆ 4:6) --- */
         .main-wrapper {
             max-width: 1200px;
             margin: 30px auto;
-            padding: 0 20px;
+            padding: 0 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Chia đôi màn hình 1:1 */
-            gap: 40px;
+            /* Thay đổi quan trọng: Cột Facebook (bên phải) chiếm 1.5 phần không gian */
+            grid-template-columns: 1fr 1.5fr; 
+            gap: 30px;
             align-items: start;
         }
 
         /* --- LEFT COLUMN: SEARCH --- */
-        .search-section { }
+        .search-section { 
+            position: sticky; /* Giữ thanh tìm kiếm trôi theo khi cuộn */
+            top: 20px;
+        }
         
         .section-title {
-            font-size: 20px; margin-bottom: 15px; border-bottom: 3px solid #000; 
+            font-size: 22px; margin-bottom: 20px; border-bottom: 4px solid #000; 
             display: inline-block; padding-bottom: 5px;
         }
 
         .search-box { 
             width: 100%; padding: 15px; font-size: 16px; 
             border: 2px solid #000; background: #fff; outline: none;
-            box-shadow: 6px 6px 0px rgba(0,0,0,1);
+            box-shadow: 5px 5px 0px rgba(0,0,0,1);
             transition: all 0.2s;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        .search-box:focus { transform: translate(2px, 2px); box-shadow: 3px 3px 0px rgba(0,0,0,1); }
+        .search-box:focus { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,1); }
 
         .status { color: #666; font-style: italic; margin-bottom: 15px; font-size: 13px; }
         
-        /* Grid kết quả nhỏ gọn hơn để vừa với cột hẹp */
+        /* Grid kết quả 1 cột để gọn gàng */
         .grid { display: grid; grid-template-columns: 1fr; gap: 15px; } 
         
         /* --- CARD DESIGN --- */
         .card { 
             border: 1px solid #ddd; background: #fff; display: flex; 
-            align-items: center; padding: 10px; 
-            transition: all 0.2s ease; border-left: 4px solid #000;
+            align-items: center; padding: 12px; 
+            transition: all 0.2s ease; border-left: 5px solid #000;
         }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #000; }
+        .card:hover { transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #d32f2f; }
         
         .avatar-container {
             width: 60px; height: 60px; border-radius: 50%; overflow: hidden; 
@@ -64,32 +68,37 @@
         }
         .avatar { width: 100%; height: 100%; object-fit: cover; }
 
-        .info h3 { font-size: 16px; margin-bottom: 3px; color: #000; }
-        .info p { font-size: 12px; color: #666; }
-        .badge { font-size: 10px; background: #000; color: #fff; padding: 2px 5px; margin-left: 5px; }
+        .info h3 { font-size: 17px; margin-bottom: 4px; color: #000; font-weight: bold; }
+        .info p { font-size: 13px; color: #555; }
+        .badge { font-size: 11px; background: #000; color: #fff; padding: 2px 6px; margin-left: 5px; border-radius: 2px; }
 
         /* --- RIGHT COLUMN: FACEBOOK --- */
         .news-section {
-            background: #f8f8f8;
-            padding: 20px;
-            border: 1px solid #ddd;
+            background: #fff; /* Bỏ nền xám để trông rộng hơn */
+            /* Loại bỏ padding để Facebook chiếm trọn bề ngang */
+            padding: 0; 
             border-radius: 8px;
+            text-align: center; /* Căn giữa */
         }
 
         .fb-page-container {
             width: 100%;
-            overflow: hidden;
             display: flex;
-            justify-content: center; /* Căn giữa Facebook Plugin */
+            justify-content: center; /* Luôn căn giữa */
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #eee;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Bóng mờ nhẹ */
         }
 
         /* --- FOOTER --- */
         footer { text-align: center; padding: 30px; color: #888; font-size: 12px; margin-top: 40px; border-top: 1px solid #eee; }
 
         /* --- MOBILE RESPONSIVE --- */
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
             .main-wrapper { grid-template-columns: 1fr; } /* Mobile về 1 cột */
-            .news-section { order: -1; margin-bottom: 30px; } /* Đưa tin tức lên đầu trên Mobile */
+            .news-section { order: -1; margin-bottom: 40px; } /* Đưa tin tức lên đầu */
+            .search-section { position: static; } /* Bỏ sticky trên mobile */
         }
     </style>
 </head>
@@ -107,19 +116,19 @@
         
         <div class="search-section">
             <h2 class="section-title">TRA CỨU VÕ SĨ</h2>
-            <input type="text" id="search" class="search-box" placeholder="Nhập tên hoặc ID..." onkeyup="searchData()">
+            <input type="text" id="search" class="search-box" placeholder="Nhập tên, ID hoặc Đơn vị..." onkeyup="searchData()">
             <p id="status" class="status">Đang tải...</p>
             <div id="results" class="grid"></div>
         </div>
 
         <div class="news-section">
-            <h2 class="section-title">TIN TỨC LIÊN ĐOÀN</h2>
+            <h2 class="section-title">THÔNG TIN TỪ LIÊN ĐOÀN</h2>
             <div class="fb-page-container">
                 <div class="fb-page" 
                      data-href="https://www.facebook.com/vietnamboxingfederation" 
                      data-tabs="timeline" 
                      data-width="500" 
-                     data-height="600" 
+                     data-height="900" 
                      data-small-header="false" 
                      data-adapt-container-width="true" 
                      data-hide-cover="false" 
@@ -133,7 +142,7 @@
 
     </div>
 
-    <footer>&copy; 2026 VIETNAM BOXING FEDERATION.</footer>
+    <footer>&copy; 2026 VIETNAM BOXING FEDERATION. OFFICIAL DATABASE.</footer>
 
     <script>
         let db = [];
@@ -143,7 +152,7 @@
             .then(res => res.ok ? res.json() : Promise.reject("Lỗi"))
             .then(data => {
                 db = data;
-                statusEl.innerText = `Sẵn sàng: ${db.length} hồ sơ.`;
+                statusEl.innerText = `DATABASE SẴN SÀNG: ${db.length} HỒ SƠ.`;
                 setTimeout(() => statusEl.style.display = 'none', 3000);
             })
             .catch(err => {
@@ -159,8 +168,9 @@
 
             const found = db.filter(item => 
                 (item.name && item.name.toLowerCase().includes(query)) || 
-                (item.id && String(item.id).includes(query))
-            ).slice(0, 6); 
+                (item.id && String(item.id).includes(query)) ||
+                (item.unit && item.unit.toLowerCase().includes(query))
+            ).slice(0, 8); 
 
             found.forEach(item => {
                 let roleLabel = 'MEMBER';

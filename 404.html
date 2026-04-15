@@ -103,20 +103,23 @@
                     </div>
                 </div>
 
-                <a href="/vnbf/" class="back-btn">&larr; QUAY LẠI TÌM KIẾM</a>
+                <a id="back-btn" href="/" class="back-btn">&larr; QUAY LẠI TÌM KIẾM</a>
             </div>
         </div>
     </div>
 
     <div id="error" class="hidden" style="text-align: center;">
         <h2>404 - KHÔNG TÌM THẤY</h2>
-        <a href="/vnbf/">Về trang chủ</a>
+        <a id="home-btn" href="/">Về trang chủ</a>
     </div>
 
     <script>
         // CONFIG: Tự động phát hiện GitHub
         const isGitHub = window.location.hostname.includes('github.io');
-        const REPO_NAME = isGitHub ? '/vnbf' : ''; 
+        const REPO_NAME = isGitHub ? '/vnbf' : '';
+        // Fix back button links based on environment
+        document.getElementById('back-btn').href = REPO_NAME + '/';
+        document.getElementById('home-btn').href = REPO_NAME + '/';
 
         async function init() {
             const path = window.location.pathname;

@@ -80,14 +80,15 @@
         <div class="card-info">
             <div class="vbf-bg">VBF</div>
             <div class="content">
-                <span id="p-role" class="role-badge">ATHLETE</span>
+                <span id="p-role" class="role-badge">VẬN ĐỘNG VIÊN</span>
                 <h1 id="p-name">NGUYEN VAN A</h1>
                 
                 <div class="data-grid">
-                    <div class="data-item">
+                    <!-- ID Hidden for privacy -->
+                    <!-- <div class="data-item">
                         <label>Mã ID</label>
                         <span id="p-id">---</span>
-                    </div>
+                    </div> -->
                     <div class="data-item">
                         <label>Đơn Vị</label>
                         <span id="p-unit">---</span>
@@ -139,7 +140,7 @@
             document.getElementById('profile').classList.remove('hidden');
 
             document.getElementById('p-name').innerText = person.name;
-            document.getElementById('p-id').innerText = person.id;
+            // document.getElementById('p-id').innerText = person.id; // Hidden for privacy
             document.getElementById('p-unit').innerText = person.unit || "N/A";
             document.getElementById('p-dob').innerText = person.dob || "N/A";
             document.getElementById('p-gender').innerText = person.gender || "N/A";

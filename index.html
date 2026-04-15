@@ -213,10 +213,10 @@
             }).slice(0, 10); 
 
             found.forEach(item => {
-                let roleLabel = 'MEMBER';
-                if(item.role === 'athlete') roleLabel = 'FIGHTER';
-                if(item.role === 'coach') roleLabel = 'COACH';
-                if(item.role === 'referee') roleLabel = 'REFEREE';
+                let roleLabel = 'THÀNH VIÊN';
+                if(item.role === 'athlete') roleLabel = 'VẬN ĐỘNG VIÊN';
+                if(item.role === 'coach') roleLabel = 'HUẤN LUYỆN VIÊN';
+                if(item.role === 'referee') roleLabel = 'TRỌNG TÀI';
                 
                 const link = `${item.role}/${item.id}`; 
                 const imgSrc = `images/${item.image}`;
@@ -228,7 +228,6 @@
                         </div>
                         <div class="info">
                             <h3>${item.name} <span class="badge">${roleLabel}</span></h3>
-                            <p>ID: ${item.id}</p>
                             <p>${item.unit || 'Vietnam'}</p>
                         </div>
                     </a>
